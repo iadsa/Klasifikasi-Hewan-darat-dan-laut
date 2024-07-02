@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Klasifikasi Hewan</title>
+    <meta name="description" content="Animal Classification">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            background-color: #e8f5e9;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .navbar {
+            background-color: #2e7d32;
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .card-header {
+            background-color: #43a047;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #388e3c;
+            border-color: #2e7d32;
+        }
+
+        .btn-primary:hover {
+            background-color: #2e7d32;
+            border-color: #1b5e20;
+        }
+
+        .preview img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+        }
+
+        .result img {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Animation */
+        .animated {
+            animation-duration: 1.5s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translate3d(0, 40px, 0);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        .fadeInUp {
+            animation-name: fadeInUp;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">Klasifikasi Hewan</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card animated fadeInUp">
+                    <div class="card-header">
+                        <h4>Pilih Gambar</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('get_output') }}" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="file-input">File input</label>
+                                <input type="file" id="file-input" name="my_image" class="form-control-file" onchange="previewImage(event)">
+                            </div>
+                            <div class="preview">
+                                <img id="file-preview" src="#" alt="Image Preview" style="display: none;">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Pilih Gambar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card animated fadeInUp delay-1s">
+                    <div class="card-header">
+                        <h4>Hasil Klasifikasi Hewan</h4>
+                    </div>
+                    <div class="card-body text-center result">
+                        {% if prediction %}
+                        <img src="{{ url_for('static', filename=img_path) }}" class="img-fluid mb-3" alt="Prediction Image">
+                        <h4>Hasil Prediksi : <i>{{ prediction }}</i></h4>
+                        {% else %}
+                        <h4>Belum ada gambar yang dipilih.</h4>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('file-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+
+</html>
